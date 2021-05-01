@@ -1,6 +1,7 @@
 package com.example.distancetrackerapp
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.media.audiofx.BassBoost
 import androidx.fragment.app.Fragment
 
@@ -12,6 +13,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.distancetrackerapp.databinding.FragmentMapsBinding
+import com.example.distancetrackerapp.service.TrackerService
+import com.example.distancetrackerapp.util.Constants.ACTION_SERVICE_START
 import com.example.distancetrackerapp.util.ExtensionFunction.disable
 import com.example.distancetrackerapp.util.ExtensionFunction.hide
 import com.example.distancetrackerapp.util.ExtensionFunction.show
@@ -26,8 +29,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButtonClickListener,EasyPermissions.PermissionCallbacks {
 
@@ -78,16 +83,26 @@ class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButton
                 else{
                     binding.timerTextView.text = currentSecond.toString()
                     binding.timerTextView.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))
-
                 }
             }
 
             override fun onFinish() {
                 binding.timerTextView.hide()
+                sendActionCommandToService(ACTION_SERVICE_START)
             }
 
         }
         timer.start()
+    }
+
+    private fun sendActionCommandToService(action:String){
+        Intent(
+                requireContext(),
+                TrackerService::class.java
+        ).apply {
+            this.action = action
+            requireContext().startService(this)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
