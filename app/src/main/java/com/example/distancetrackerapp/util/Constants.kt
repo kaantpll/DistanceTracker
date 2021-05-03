@@ -14,5 +14,8 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME="tracker_notification"
     const val NOTIFICATION_ID=3
 
+    const val LOCATION_UPDATE_INTERVAL = 4000L
+    const val LOCATION_FASTEST_UPDATE_INTERVAL=2000L
+
     const val PENDING_INTENT_REQUEST_CODE =99
 }

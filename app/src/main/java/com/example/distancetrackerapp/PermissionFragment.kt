@@ -15,6 +15,7 @@ import com.vmadalin.easypermissions.dialogs.SettingsDialog
 class PermissionFragment : Fragment() , EasyPermissions.PermissionCallbacks {
 
     private var _binding : FragmentPermissionBinding? = null
+
     private val binding  get() = _binding!!
 
     override fun onCreateView(
@@ -25,9 +26,11 @@ class PermissionFragment : Fragment() , EasyPermissions.PermissionCallbacks {
         _binding = FragmentPermissionBinding.inflate(inflater,container,false)
 
         binding.continueButton.setOnClickListener {
+
             if(hasLocationPermission(requireContext())){
                 findNavController().navigate(R.id.action_permissionFragment_to_mapsFragment)
-            }else{
+            }
+            else{
                 requestLocationPermission(this)
             }
         }

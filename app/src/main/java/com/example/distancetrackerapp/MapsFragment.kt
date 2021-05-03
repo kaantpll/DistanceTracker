@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +35,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButtonClickListener,EasyPermissions.PermissionCallbacks {
+class MapsFragment : Fragment(),OnMapReadyCallback , GoogleMap.OnMyLocationButtonClickListener,EasyPermissions.PermissionCallbacks {
 
     private var _binding : FragmentMapsBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var map : GoogleMap
+
+    private var locationList = mutableListOf<LatLng>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -123,8 +127,20 @@ class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButton
             isTiltGesturesEnabled = false
             isCompassEnabled = false
             isScrollGesturesEnabled = false
+
         }
 
+        observeTrackerService()
+
+    }
+
+    private fun observeTrackerService(){
+        TrackerService.locationList.observe(viewLifecycleOwner,{
+            if(it!= null){
+                locationList = it
+                Log.d("LocationList",locationList.toString())
+            }
+        })
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
@@ -137,7 +153,7 @@ class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButton
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
-        TODO("Not yet implemented")
+       onStartButtonClicked()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -154,7 +170,7 @@ class MapsFragment : Fragment(),OnMapReadyCallback ,GoogleMap.OnMyLocationButton
 
         binding.hintTextView.animate().alpha(0f).duration = 1500
         lifecycleScope.launch {
-            delay(3000)
+            delay(2000)
             binding.hintTextView.hide()
             binding.startButton.show()
         }
