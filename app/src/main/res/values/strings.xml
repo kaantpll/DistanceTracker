@@ -8,4 +8,9 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="tap_of_my_location_button">Tap of My Location Button.</string>
+    <string name="distance">Distance</string>
+    <string name="_0_0km">0.0km</string>
+    <string name="_00_00_00">00:00:00</string>
+    <string name="share">Share</string>
+    <string name="result">%1$s km</string>
 </resources>
